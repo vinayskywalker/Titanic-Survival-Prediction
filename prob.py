@@ -35,18 +35,24 @@ def main():
     test_data_set=get_test_data()
     data=[train_data_set,test_data_set]
 
-    #map the male value to 1 and female value to 0 in train and test data set
+    # map the male value to 1 and female value to 0 in train and test data set
     for dataset in data:
         dataset['Sex']=dataset['Sex'].map({'female':0,'male':1})
     
-    #fill missing values of age column to random values between mean-std and mean+std
+    # fill missing values of age column to random values between mean-std and mean+std
     for dataset in data:
         mean=dataset['Age'].mean()
         std=dataset['Age'].std()
         rand_age=random.randint(int(mean-std),int(mean+std))
         dataset['Age'].fillna(rand_age,inplace=True)
     
+    for dataset in data:
+        dataset['Embarked'].fillna('S',inplace=True)
+        dataset['Cabin']=0
+        dataset['Fare'].fillna(dataset['Fare'].mean(),inplace=True)
+
     
+
     
 
 
