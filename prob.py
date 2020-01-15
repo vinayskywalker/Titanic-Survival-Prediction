@@ -48,9 +48,32 @@ def main():
     
     for dataset in data:
         dataset['Embarked'].fillna('S',inplace=True)
-        dataset['Cabin']=0
         dataset['Fare'].fillna(dataset['Fare'].mean(),inplace=True)
+    
+    for dataset in data:
+        dataset.loc[(dataset.Embarked == 'S'),'Embarked']=ord('S')
+        dataset.loc[(dataset.Embarked == 'C'),'Embarked']=ord('C')
+        dataset.loc[(dataset.Embarked == 'Q'),'Embarked']=ord('Q')
 
+    
+    for dataset in data:
+        del dataset['Cabin']
+        del dataset['Ticket']
+        del dataset['Name']
+    
+
+    Y_train=train_data_set['Survived']
+    del train_data_set['Survived']
+    X_train=train_data_set
+    print(test_data_set.info())
+    random_forest=RandomForestClassifier(n_estimators=100)
+    random_forest.fit(X_train,Y_train)
+    Y_prediction=random_forest.predict(test_data_set)
+    abc=test_data_set['PassengerId']
+    print(Y_prediction.shape)
+    dict={'x':abc,'y':Y_prediction}
+    df=pd.DataFrame(dict)
+    df.to_csv('file.csv')
     
 
     
