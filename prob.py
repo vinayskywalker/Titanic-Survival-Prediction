@@ -1,6 +1,7 @@
 import numpy as np
 import sys
 import random
+import string
 
 import pandas as pd
 
@@ -9,15 +10,11 @@ from matplotlib import style
 import seaborn as sns
 
 
-from sklearn import linear_model
-from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import Perceptron
 from sklearn.linear_model import SGDClassifier
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.svm import SVC,LinearSVC
-from sklearn.naive_bayes import GaussianNB
+
+
 
 
 
@@ -28,6 +25,7 @@ def get_test_data():
 def get_train_data():
     train_file=pd.read_csv("data/train.csv")
     return train_file
+
 
 
 def main():
@@ -73,19 +71,63 @@ def main():
         dataset.loc[(dataset['Age']>32) & (dataset['Age']<=48),'Age']=2
         dataset.loc[(dataset['Age']>48) & (dataset['Age']<=64),'Age']=3
         dataset.loc[(dataset['Age']>64),'Age']=4
-
+    
+    title_list=['Mrs','Mr','Master','Miss','Major','Rev','Dr','Ms','Mlle','Col','Capt','Mme','Countess','Don','Jonkheer']
+    name_train_list=train_data_set['Name'].to_list()
+    name_test_list=test_data_set['Name'].to_list()
+    i=0
+    for i in range(len(name_train_list)):
+        for title in title_list:
+            if name_train_list[i].find(title)!=-1:
+                name_train_list[i]=title
+                break
+    
+    i=0
+    for i in range(len(name_test_list)):
+        for title in title_list:
+            if name_test_list[i].find(title)!=-1:
+                name_test_list[i]=title
+                break
+    
+    i=0
+    for i in range(len(name_train_list)):
+        if name_train_list[i]=='Mme' or name_train_list[i]=='Countess':
+            name_train_list[i]='Mrs'
+        elif name_train_list[i]=='Ms' or name_train_list[i]=='Mlle':
+            name_train_list[i]='Miss'
+        elif name_train_list[i]=='Major' or name_train_list[i]=='Rev' or name_train_list[i]=='Col' or name_train_list[i]=='Dr':
+            name_train_list[i]='Mr'
+        elif name_train_list[i]=='Capt' or name_train_list[i]=='Don' or name_train_list[i]=='Jonkheer':
+            name_train_list[i]='Mr'
     # print(train_data_set[['Alone','Survived']].groupby(['Alone'],as_index=False).mean())
+    i=0
+    for i in range(len(name_test_list)):
+        if name_test_list[i]=='Mme' or name_test_list[i]=='Countess':
+            name_test_list[i]='Mrs'
+        elif name_test_list[i]=='Ms' or name_test_list[i]=='Mlle':
+            name_test_list[i]='Miss'
+        elif name_test_list[i]=='Major' or name_test_list[i]=='Rev' or name_test_list[i]=='Col' or name_test_list[i]=='Dr':
+            name_test_list[i]='Mr'
+        elif name_test_list[i]=='Capt' or name_test_list[i]=='Don' or name_test_list[i]=='Jonkheer':
+            name_test_list[i]='Mr'
+    
+    train_data_set['Name']=name_train_list
+    test_data_set['Name']=name_test_list
+
+    for dataset in data:
+        dataset['Name']=dataset['Name'].map({'Master':0,'Mr':1,'Mrs':2,'Miss':3})
+    
+    # print(train_data_set['Name'])
     
     for dataset in data:
         del dataset['Cabin']
         del dataset['Ticket']
-        del dataset['Name']
         del dataset['Parch']
         del dataset['SibSp']
         del dataset['FamilySize']
 
     
-    print(train_data_set.info())
+    # print(train_data_set.info())
     
 
     
