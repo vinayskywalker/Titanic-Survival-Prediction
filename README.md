@@ -23,7 +23,8 @@ Using Random Forest predict the Survival for the test data set
 
 Got 74.162% Accuracy
 
-After Creating New features Alone and mapping 'Embarked' Features to 0,1,2 gives accuracy of 72.21.It may be because i deleted three features 'Cabin','Name','Ticket'.
+After Creating New features Alone and mapping 'Embarked' Features to 0,1,2 gives accuracy of 72.21
+It may be because i deleted three features 'Cabin','Name','Ticket'.
 from the data,age group between 0-16 have higher survival rate so divide the age group in five different parts.
 Now dividing group in five parts and mapping with 0-4,delete the some features like Parch,SibSp and FamilySize gives the Accuracy of 74.641%.
 
